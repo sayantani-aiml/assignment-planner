@@ -1,21 +1,46 @@
 /* ==========================================================================
-   1. GLOBAL STYLES & RESET
+   1. GLOBAL VARIABLES & LIGHT/DARK VARIABLES
    ========================================================================== */
+:root {
+    --bg-gradient: linear-gradient(135deg, #f0f4ff, #eef2ff);
+    --card-bg: #ffffff;
+    --text-main: #2e384d;
+    --text-muted: #64748b;
+    --text-title: #1e266d;
+    --border-color: #e2e8f0;
+    --input-bg: #f8fafc;
+    --shadow: rgba(165, 178, 211, 0.15);
+    --shadow-task: rgba(165, 178, 211, 0.08);
+}
+
+[data-theme="dark"] {
+    --bg-gradient: linear-gradient(135deg, #0f172a, #1e1b4b);
+    --card-bg: #1e293b;
+    --text-main: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-title: #f1f5f9;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-task: rgba(0, 0, 0, 0.2);
+}
+
 body {
     margin: 0;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    background: linear-gradient(135deg, #f0f4ff, #eef2ff);
-    color: #2e384d;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-main);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 40px 20px;
     box-sizing: border-box;
+    transition: background 0.3s ease;
 }
 
 /* ==========================================================================
-   2. DASHBOARD GRID SYSTEM
+   2. DASHBOARD MAIN GRID SYSTEM
    ========================================================================== */
 .dashboard-container {
     display: grid;
@@ -25,31 +50,47 @@ body {
     max-width: 1200px;
 }
 
-/* Left Sidebar Panel */
 .sidebar-card {
-    background: #ffffff;
+    background: var(--card-bg);
     padding: 32px;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(165, 178, 211, 0.15);
+    box-shadow: 0 10px 30px var(--shadow);
     height: fit-content;
     position: sticky;
     top: 40px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 h1 {
     margin: 0 0 6px 0;
-    font-size: 28px;
-    color: #1e266d;
+    font-size: 26px;
+    color: var(--text-title);
     font-weight: 700;
 }
 
 .header p {
-    margin: 0 0 28px 0;
-    color: #7b88a8;
+    margin: 0 0 24px 0;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
-/* Right Main Content Panel */
+.theme-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    font-size: 18px;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.theme-btn:hover { transform: scale(1.1); }
+
 .main-content {
     display: flex;
     flex-direction: column;
@@ -57,39 +98,50 @@ h1 {
 }
 
 /* ==========================================================================
-   3. TASK CREATION FORM STYLING
+   3. PROGRESS BAR DESIGN
    ========================================================================== */
-.taskInput {
+.progress-container {
+    margin-bottom: 20px;
+}
+.progress-labels {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+.progress-bar-bg {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #22c55e);
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.input-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #5c6885;
-    margin-top: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+/* ==========================================================================
+   4. FORM ELEMENTS & TOOLBARS
+   ========================================================================== */
+.taskInput { display: flex; flex-direction: column; gap: 4px; }
+.input-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
 input, select {
     padding: 14px 16px;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid var(--border-color);
     border-radius: 12px;
-    background: #f8fafc;
+    background: var(--input-bg);
+    color: var(--text-main);
     font-size: 14px;
-    color: #334155;
     outline: none;
     transition: all 0.2s ease;
 }
-
-input:focus, select:focus {
-    border-color: #4f46e5;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-}
+input:focus, select:focus { border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
 
 .add-btn {
     margin-top: 20px;
@@ -98,250 +150,106 @@ input:focus, select:focus {
     background: #4f46e5;
     color: white;
     font-weight: 600;
-    font-size: 15px;
     border-radius: 12px;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
     transition: all 0.2s ease;
 }
+.add-btn:hover { background: #4338ca; transform: translateY(-2px); }
 
-.add-btn:hover {
-    background: #4338ca;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
-}
-
-/* ==========================================================================
-   4. METRIC STAT CARDS
-   ========================================================================== */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+/* Search & Filtering Toolbar */
+.toolbar-card {
+    background: var(--card-bg);
+    padding: 16px 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px var(--shadow-task);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 20px;
 }
-
-.card {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(165, 178, 211, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.card h2 {
-    font-size: 36px;
-    margin: 0 0 4px 0;
-    font-weight: 700;
-}
-
-.card p {
-    margin: 0;
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* Metric Color Coding Accent Borders */
-.card-total h2 { color: #2563eb; }
-.card-total { border-top: 4px solid #2563eb; }
-
-.card-pending h2 { color: #ea580c; }
-.card-pending { border-top: 4px solid #ea580c; }
-
-.card-done h2 { color: #16a34a; }
-.card-done { border-top: 4px solid #16a34a; }
+.search-box { position: relative; flex: 1; display: flex; align-items: center; }
+.search-icon { position: absolute; left: 14px; color: var(--text-muted); }
+.search-box input { width: 100%; padding-left: 40px; }
+.sort-box { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
 
 /* ==========================================================================
-   5. TASK LISTS & CONTAINERS
+   5. STAT CARDS & BOARD SECTIONS
    ========================================================================== */
-.task-board h2 {
-    font-size: 20px;
-    color: #1e293b;
-    margin: 0 0 20px 0;
-}
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.card { background: var(--card-bg); padding: 24px; border-radius: 20px; box-shadow: 0 10px 25px var(--shadow); border-top: 4px solid var(--border-color); }
+.card h2 { font-size: 36px; margin: 0 0 4px 0; font-weight: 700; }
+.card p { margin: 0; color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
-#taskList, #completedTaskList {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+.card-total { border-top-color: #2563eb; } .card-total h2 { color: #2563eb; }
+.card-pending { border-top-color: #ea580c; } .card-pending h2 { color: #ea580c; }
+.card-done { border-top-color: #16a34a; } .card-done h2 { color: #16a34a; }
 
-/* Completed Segment Secondary Subheading color styling */
-.completed-section h2 {
-    color: #64748b;
-    margin-top: 16px;
-}
+.task-board h2 { font-size: 18px; color: var(--text-title); margin: 0 0 16px 0; }
+#taskList, #completedTaskList { display: flex; flex-direction: column; gap: 14px; min-height: 20px; }
+.completed-section h2 { color: var(--text-muted); margin-top: 16px; }
 
 /* ==========================================================================
-   6. DYNAMIC TASK ITEM CARD COMPONENTS
+   6. CARDS SLIDE-IN ANIMATION & DYNAMIC COMPONENT STYLING
    ========================================================================== */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .task {
-    background: #ffffff;
-    padding: 20px;
+    background: var(--card-bg);
+    padding: 18px 20px;
     border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(165, 178, 211, 0.08);
+    box-shadow: 0 4px 15px var(--shadow-task);
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-left: 6px solid #cbd5e1;
+    animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.task:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(165, 178, 211, 0.15);
-}
+.task-info h3 { margin: 0 0 4px 0; font-size: 17px; color: var(--text-title); }
+.task-info p { margin: 0 0 8px 0; color: var(--text-muted); font-size: 13px; }
+.task-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.task-date-display { font-size: 12px; color: var(--text-main); background: var(--input-bg); padding: 4px 10px; border-radius: 20px; font-weight: 500; border: 1px solid var(--border-color); }
 
-/* Content Information Block */
-.task-info h3 {
-    margin: 0 0 4px 0;
-    font-size: 18px;
-    color: #1e293b;
-}
-
-.task-info p {
-    margin: 0 0 8px 0;
-    color: #64748b;
-    font-size: 14px;
-}
-
-.task-meta {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.task-date-display {
-    font-size: 13px;
-    color: #64748b;
-    background: #f1f5f9;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-}
-
-/* ==========================================================================
-   7. INTERACTIVE ACTION INPUTS & PILLES
-   ========================================================================== */
-/* Checkbox UI Styling */
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-right: 4px;
-}
-
-.task-checkbox {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    border: 2px solid #cbd5e1;
-    cursor: pointer;
-    accent-color: #16a34a;
-    transition: all 0.2s;
-}
-
-/* Inline Date Input Box Override inside cards */
-.inline-date-edit {
-    padding: 2px 6px;
-    font-size: 13px;
-    border: 1.5px solid #4f46e5;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #334155;
-    width: 120px;
-}
-
-/* Priority Tags System Colors */
-.priority-badge {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
+/* Warning Indicators */
+.warning-pill {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #ffedd5;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
     border-radius: 20px;
     text-transform: uppercase;
 }
+[data-theme="dark"] .warning-pill { background: #7c2d12; color: #ffedd5; border: none; }
 
-.high { border-left-color: #ef4444; }
-.high .priority-badge { background: #fee2e2; color: #b91c1c; }
+/* Checkboxes & Buttons */
+.checkbox-container { display: flex; align-items: center; }
+.task-checkbox { width: 19px; height: 19px; border-radius: 5px; cursor: pointer; accent-color: #16a34a; }
+.inline-date-edit { padding: 2px 6px; font-size: 12px; border: 1.5px solid #4f46e5; border-radius: 6px; background: var(--card-bg); color: var(--text-main); width: 115px; }
 
-.medium { border-left-color: #f97316; }
-.medium .priority-badge { background: #ffedd5; color: #c2410c; }
+.priority-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+.high { border-left-color: #ef4444; } .high .priority-badge { background: #fee2e2; color: #b91c1c; }
+.medium { border-left-color: #f97316; } .medium .priority-badge { background: #ffedd5; color: #c2410c; }
+.low { border-left-color: #22c55e; } .low .priority-badge { background: #dcfce7; color: #15803d; }
 
-.low { border-left-color: #22c55e; }
-.low .priority-badge { background: #dcfce7; color: #15803d; }
+.task-actions { display: flex; gap: 8px; }
+.edit-btn, .delete-btn { padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; border: 1px solid var(--border-color); }
+.edit-btn { background: var(--input-bg); color: var(--text-main); }
+.delete-btn { background: #fff1f2; color: #e11d48; border-color: #ffe4e6; }
+[data-theme="dark"] .delete-btn { background: #881337; color: #ffe4e6; border: none; }
 
-/* Control Action Row Buttons */
-.task-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
+.task-completed { opacity: 0.55; border-left-color: var(--border-color) !important; }
+.task-completed .task-info h3 { text-decoration: line-through; color: var(--text-muted); }
 
-.edit-btn {
-    padding: 8px 14px;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.edit-btn:hover {
-    background: #e2e8f0;
-    color: #1e293b;
-}
-
-.delete-btn {
-    padding: 8px 14px;
-    background: #fff1f2;
-    color: #e11d48;
-    border: 1px solid #ffe4e6;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.delete-btn:hover {
-    background: #ffe4e6;
-    color: #9f1239;
-}
-
-/* ==========================================================================
-   8. COMPLETED TASKS CONDITIONAL ARCHITECTURE
-   ========================================================================== */
-.task-completed {
-    opacity: 0.65;
-    border-left-color: #cbd5e1 !important;
-    background: #f8fafc;
-}
-
-.task-completed .task-info h3 {
-    text-decoration: line-through;
-    color: #64748b;
-}
-
-/* ==========================================================================
-   9. MOBILE RESPONSIVE MEDIA BREAKPOINTS
-   ========================================================================== */
 @media (max-width: 900px) {
-    .dashboard-container {
-        grid-template-columns: 1fr;
-    }
-    .sidebar-card {
-        position: relative;
-        top: 0;
-    }
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
+    .dashboard-container { grid-template-columns: 1fr; }
+    .sidebar-card { position: relative; top: 0; }
+    .toolbar-card { flex-direction: column; align-items: stretch; }
+    .stats-grid { grid-template-columns: 1fr; gap: 12px; }
 }

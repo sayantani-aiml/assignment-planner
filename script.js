@@ -1,4 +1,18 @@
-function addTask() {
+// Local Storage Key Handles
+const STORAGE_KEY = "planner_assignments_data";
+const THEME_KEY = "planner_dashboard_theme";
+
+// Master Task Array State
+let assignments = [];
+
+// Initialize Dashboard App Configuration
+document.addEventListener("DOMContentLoaded", () => {
+    loadTheme();
+    loadTasks();
+});
+
+// Create and Add a Task
+function handleAddTaskClick() {
     let title = document.getElementById("title").value.trim();
     let subject = document.getElementById("subject").value.trim();
     let date = document.getElementById("date").value;
@@ -9,102 +23,201 @@ function addTask() {
         return;
     }
 
-    // Set fallback if date is left unselected
-    let rawDate = date ? date : new Date().toISOString().split('T')[0];
+    let defaultDate = date ? date : new Date().toISOString().split('T')[0];
 
-    let li = document.createElement("div");
-    li.classList.add("task");
-    li.classList.add(priority.toLowerCase());
-    
-    // Store raw date string safely inside a data attribute for editing later
-    li.setAttribute("data-date", rawDate); 
+    // Form Object Node Model
+    let taskObj = {
+        id: "task_" + Date.now(),
+        title: title,
+        subject: subject ? subject : 'No specific subject',
+        date: defaultDate,
+        priority: priority,
+        completed: false
+    };
 
-    li.innerHTML = `
-        <div class="checkbox-container">
-            <input type="checkbox" class="task-checkbox" onchange="toggleTaskComplete(this)">
-        </div>
-        <div class="task-info">
-            <h3>${title}</h3>
-            <p>${subject ? subject : 'No specific subject'}</p>
-            <div class="task-meta">
-                <span class="task-date-display">📅 ${formatDate(rawDate)}</span>
-                <span class="priority-badge">${priority}</span>
-            </div>
-        </div>
-        <div class="task-actions">
-            <button class="edit-btn" onclick="toggleEditDate(this)">Edit Date</button>
-            <button class="delete-btn" onclick="removeTask(this)">Delete</button>
-        </div>
-    `;
+    assignments.push(taskObj);
+    saveTasks();
+    filterAndRenderTasks();
 
-    document.getElementById("taskList").appendChild(li);
-    updateStats();
-
-    // Reset fields
+    // Reset Form fields
     document.getElementById("title").value = "";
     document.getElementById("subject").value = "";
     document.getElementById("date").value = "";
 }
 
-// Checkbox complete/undo action routing logic
-function toggleTaskComplete(checkbox) {
-    let taskCard = checkbox.closest(".task");
-    let editButton = taskCard.querySelector(".edit-btn");
+// Logic to Save and Load to browser Storage Matrix
+function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(assignments));
+}
 
-    if (checkbox.checked) {
-        taskCard.classList.add("task-completed");
-        if(editButton) editButton.style.display = "none"; // Hide edit option when completed
-        document.getElementById("completedTaskList").appendChild(taskCard);
+function loadTasks() {
+    let rawData = localStorage.getItem(STORAGE_KEY);
+    if (rawData) {
+        assignments = JSON.parse(rawData);
     } else {
-        taskCard.classList.remove("task-completed");
-        if(editButton) editButton.style.display = "inline-block";
-        document.getElementById("taskList").appendChild(taskCard);
+        assignments = [];
     }
-    updateStats();
+    filterAndRenderTasks();
 }
 
-// Inline Dynamic Date Editing System
-function toggleEditDate(button) {
-    let taskCard = button.closest(".task");
-    let dateDisplaySpan = taskCard.querySelector(".task-date-display");
-    let currentRawDate = taskCard.getAttribute("data-date");
+// Process rendering with combined pipeline handling Sorting and Searching
+function filterAndRenderTasks() {
+    let searchQuery = document.getElementById("searchBar").value.toLowerCase();
+    let sortCriterion = document.getElementById("sortSelect").value;
 
-    if (button.innerText === "Edit Date") {
-        // Swap static display string text out for a working interactive input node element
-        dateDisplaySpan.innerHTML = `<input type="date" class="inline-date-edit" value="${currentRawDate}">`;
-        button.innerText = "Save";
-        button.style.background = "#dcfce7";
-        button.style.color = "#16a34a";
+    let filtered = assignments.filter(task => {
+        return task.title.toLowerCase().includes(searchQuery) || 
+               task.subject.toLowerCase().includes(searchQuery);
+    });
+
+    // Execute sorting algorithms depending on dynamic user values chosen
+    if (sortCriterion === "date") {
+        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (sortCriterion === "priority") {
+        const order = { "High": 1, "Medium": 2, "Low": 3 };
+        filtered.sort((a, b) => order[a.priority] - order[b.priority]);
+    } else if (sortCriterion === "subject") {
+        filtered.sort((a, b) => a.subject.localeCompare(b.subject));
+    }
+
+    // Clear lists before running DOM compilation loop
+    document.getElementById("taskList").innerHTML = "";
+    document.getElementById("completedTaskList").innerHTML = "";
+
+    filtered.forEach(task => {
+        let li = document.createElement("div");
+        li.className = `task ${task.priority.toLowerCase()} ${task.completed ? 'task-completed' : ''}`;
+        li.id = task.id;
+
+        // Verify if active task requires an urgent overdue warning badge
+        let urgencyBadgeHTML = "";
+        if (!task.completed) {
+            let relativeStatus = checkUrgency(task.date);
+            if (relativeStatus === "overdue") urgencyBadgeHTML = `<span class="warning-pill">⚠️ Overdue</span>`;
+            else if (relativeStatus === "tomorrow") urgencyBadgeHTML = `<span class="warning-pill">⚠️ Due Tomorrow</span>`;
+        }
+
+        li.innerHTML = `
+            <div class="checkbox-container">
+                <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskComplete('${task.id}')">
+            </div>
+            <div class="task-info">
+                <h3>${task.title}</h3>
+                <p>${task.subject}</p>
+                <div class="task-meta">
+                    <span class="task-date-display" data-rawdate="${task.date}">📅 ${formatDate(task.date)}</span>
+                    <span class="priority-badge">${task.priority}</span>
+                    ${urgencyBadgeHTML}
+                </div>
+            </div>
+            <div class="task-actions">
+                ${!task.completed ? `<button class="edit-btn" onclick="toggleEditDate('${task.id}', this)">Edit Date</button>` : ''}
+                <button class="delete-btn" onclick="removeTask('${task.id}')">Delete</button>
+            </div>
+        `;
+
+        if (task.completed) {
+            document.getElementById("completedTaskList").appendChild(li);
+        } else {
+            document.getElementById("taskList").appendChild(li);
+        }
+    });
+
+    updateStatsAndProgressBar();
+}
+
+// Check assignment dates relative to today's local time context
+function checkUrgency(dateStr) {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let targetDate = new Date(dateStr);
+    targetDate.setHours(0, 0, 0, 0);
+
+    let diffTime = targetDate - today;
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return "overdue";
+    if (diffDays === 1) return "tomorrow";
+    return "safe";
+}
+
+// Toggle Complete Function Mapping
+function toggleTaskComplete(id) {
+    let task = assignments.find(t => t.id === id);
+    if (task) {
+        task.completed = !task.completed;
+        saveTasks();
+        filterAndRenderTasks();
+    }
+}
+
+// Dynamic Interactive Inline Date Editor
+function toggleEditDate(id, buttonElement) {
+    let taskCard = document.getElementById(id);
+    let dateDisplay = taskCard.querySelector(".task-date-display");
+    let currentRawDate = dateDisplay.getAttribute("data-rawdate");
+
+    if (buttonElement.innerText === "Edit Date") {
+        dateDisplay.innerHTML = `<input type="date" class="inline-date-edit" value="${currentRawDate}">`;
+        buttonElement.innerText = "Save";
+        buttonElement.style.background = "#dcfce7";
+        buttonElement.style.color = "#15803d";
     } else {
-        let newRawDate = dateDisplaySpan.querySelector(".inline-date-edit").value;
-        if(!newRawDate) newRawDate = currentRawDate; // Fallback validation control
-        
-        taskCard.setAttribute("data-date", newRawDate);
-        dateDisplaySpan.innerHTML = `📅 ${formatDate(newRawDate)}`;
-        
-        button.innerText = "Edit Date";
-        button.style.background = "#f1f5f9";
-        button.style.color = "#475569";
+        let newRawDate = dateDisplay.querySelector(".inline-date-edit").value;
+        if (!newRawDate) newRawDate = currentRawDate;
+
+        let task = assignments.find(t => t.id === id);
+        if (task) {
+            task.date = newRawDate;
+            saveTasks();
+        }
+        buttonElement.innerText = "Edit Date";
+        buttonElement.style.background = "";
+        buttonElement.style.color = "";
+        filterAndRenderTasks();
     }
 }
 
-function removeTask(buttonElement) {
-    buttonElement.closest(".task").remove();
-    updateStats();
+function removeTask(id) {
+    assignments = assignments.filter(t => t.id !== id);
+    saveTasks();
+    filterAndRenderTasks();
 }
 
-// Date conversion helper string parser utility
 function formatDate(dateString) {
     return dateString.split('-').reverse().join('/');
 }
 
-// Advanced Multi-metric Math counter computation
-function updateStats() {
-    let pendingCount = document.getElementById("taskList").querySelectorAll(".task").length;
-    let completedCount = document.getElementById("completedTaskList").querySelectorAll(".task").length;
-    let totalCount = pendingCount + completedCount;
+// Compute metrics data state values + run live CSS scaling on progress fill bar
+function updateStatsAndProgressBar() {
+    let pendingCount = assignments.filter(t => !t.completed).length;
+    let completedCount = assignments.filter(t => t.completed).length;
+    let totalCount = assignments.length;
 
     document.getElementById("total").innerText = totalCount;
     document.getElementById("pending").innerText = pendingCount;
     document.getElementById("done").innerText = completedCount;
+
+    // Run dynamic progress parsing calculation logic safely
+    let computationProgressRatio = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    
+    document.getElementById("progressPercent").innerText = `${computationProgressRatio}%`;
+    document.getElementById("progressBarFill").style.width = `${computationProgressRatio}%`;
+}
+
+// Dark Mode Toggle Strategy Controls
+function toggleTheme() {
+    let currentTheme = document.documentElement.getAttribute("data-theme");
+    let targetTheme = (currentTheme === "dark") ? "light" : "dark";
+    
+    document.documentElement.setAttribute("data-theme", targetTheme);
+    document.getElementById("themeToggle").innerText = (targetTheme === "dark") ? "☀️" : "🌙";
+    localStorage.setItem(THEME_KEY, targetTheme);
+}
+
+function loadTheme() {
+    let savedTheme = localStorage.getItem(THEME_KEY) || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    document.getElementById("themeToggle").innerText = (savedTheme === "dark") ? "☀️" : "🌙";
 }

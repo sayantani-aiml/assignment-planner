@@ -5,14 +5,14 @@ const THEME_KEY = "planner_dashboard_theme";
 // Master Task Array State
 let assignments = [];
 
-// Initialize Dashboard App Configuration
+// Initialize Dashboard App Configuration when window builds
 document.addEventListener("DOMContentLoaded", () => {
     loadTheme();
     loadTasks();
 });
 
-// Create and Add a Task
-function handleAddTaskClick() {
+// Create and Add a Task (Matches your HTML onclick="addTask()")
+function addTask() {
     let title = document.getElementById("title").value.trim();
     let subject = document.getElementById("subject").value.trim();
     let date = document.getElementById("date").value;
@@ -23,9 +23,10 @@ function handleAddTaskClick() {
         return;
     }
 
+    // Set a default string fallback if the date input is left empty
     let defaultDate = date ? date : new Date().toISOString().split('T')[0];
 
-    // Form Object Node Model
+    // Build the master data object for this task item
     let taskObj = {
         id: "task_" + Date.now(),
         title: title,
@@ -35,21 +36,23 @@ function handleAddTaskClick() {
         completed: false
     };
 
+    // Push into our state tracking array, update disk memory, and re-render
     assignments.push(taskObj);
     saveTasks();
     filterAndRenderTasks();
 
-    // Reset Form fields
+    // Reset Form fields for clean next-input workflow
     document.getElementById("title").value = "";
     document.getElementById("subject").value = "";
     document.getElementById("date").value = "";
 }
 
-// Logic to Save and Load to browser Storage Matrix
+// Save data array back to LocalStorage string matrix
 function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(assignments));
 }
 
+// Fetch saved arrays from localStorage data cache
 function loadTasks() {
     let rawData = localStorage.getItem(STORAGE_KEY);
     if (rawData) {
@@ -60,17 +63,18 @@ function loadTasks() {
     filterAndRenderTasks();
 }
 
-// Process rendering with combined pipeline handling Sorting and Searching
+// The master rendering engine (Handles Search, Filters, and DOM updates)
 function filterAndRenderTasks() {
     let searchQuery = document.getElementById("searchBar").value.toLowerCase();
     let sortCriterion = document.getElementById("sortSelect").value;
 
+    // 1. Filter out list nodes matches using active Search query
     let filtered = assignments.filter(task => {
         return task.title.toLowerCase().includes(searchQuery) || 
                task.subject.toLowerCase().includes(searchQuery);
     });
 
-    // Execute sorting algorithms depending on dynamic user values chosen
+    // 2. Process sorting algorithms depending on dynamic configuration selected
     if (sortCriterion === "date") {
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     } else if (sortCriterion === "priority") {
@@ -80,16 +84,17 @@ function filterAndRenderTasks() {
         filtered.sort((a, b) => a.subject.localeCompare(b.subject));
     }
 
-    // Clear lists before running DOM compilation loop
+    // Clear existing raw lists before running the DOM drawing layout build loop
     document.getElementById("taskList").innerHTML = "";
     document.getElementById("completedTaskList").innerHTML = "";
 
+    // 3. Render items into the UI panels dynamically
     filtered.forEach(task => {
         let li = document.createElement("div");
         li.className = `task ${task.priority.toLowerCase()} ${task.completed ? 'task-completed' : ''}`;
         li.id = task.id;
 
-        // Verify if active task requires an urgent overdue warning badge
+        // Check if an uncompleted active task requires an urgent overdue warning banner badge
         let urgencyBadgeHTML = "";
         if (!task.completed) {
             let relativeStatus = checkUrgency(task.date);
@@ -123,10 +128,11 @@ function filterAndRenderTasks() {
         }
     });
 
+    // Run updates on the stat counter nodes and calculation progress matrix fill bar
     updateStatsAndProgressBar();
 }
 
-// Check assignment dates relative to today's local time context
+// Compare target task end dates to today's local midnight clock baseline
 function checkUrgency(dateStr) {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -142,7 +148,7 @@ function checkUrgency(dateStr) {
     return "safe";
 }
 
-// Toggle Complete Function Mapping
+// Handle Checkbox item complete/undo dynamic structural layout changes
 function toggleTaskComplete(id) {
     let task = assignments.find(t => t.id === id);
     if (task) {
@@ -152,7 +158,7 @@ function toggleTaskComplete(id) {
     }
 }
 
-// Dynamic Interactive Inline Date Editor
+// Dynamic Inline Date modification form input toggler systems
 function toggleEditDate(id, buttonElement) {
     let taskCard = document.getElementById(id);
     let dateDisplay = taskCard.querySelector(".task-date-display");
@@ -179,17 +185,19 @@ function toggleEditDate(id, buttonElement) {
     }
 }
 
+// Drop single indexed task items completely out of data tree array
 function removeTask(id) {
     assignments = assignments.filter(t => t.id !== id);
     saveTasks();
     filterAndRenderTasks();
 }
 
+// Transform raw yyyy-mm-dd dates into readable dd/mm/yyyy notation strings
 function formatDate(dateString) {
     return dateString.split('-').reverse().join('/');
 }
 
-// Compute metrics data state values + run live CSS scaling on progress fill bar
+// Re-calculate statistics data math metrics and live scale the CSS progress percentage fills
 function updateStatsAndProgressBar() {
     let pendingCount = assignments.filter(t => !t.completed).length;
     let completedCount = assignments.filter(t => t.completed).length;
@@ -199,14 +207,14 @@ function updateStatsAndProgressBar() {
     document.getElementById("pending").innerText = pendingCount;
     document.getElementById("done").innerText = completedCount;
 
-    // Run dynamic progress parsing calculation logic safely
-    let computationProgressRatio = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    // Safe mathematical ratio percent assignment loop computations 
+    let progressRatio = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     
-    document.getElementById("progressPercent").innerText = `${computationProgressRatio}%`;
-    document.getElementById("progressBarFill").style.width = `${computationProgressRatio}%`;
+    document.getElementById("progressPercent").innerText = `${progressRatio}%`;
+    document.getElementById("progressBarFill").style.width = `${progressRatio}%`;
 }
 
-// Dark Mode Toggle Strategy Controls
+// Smooth Dark Mode State Handler Strategy Toggles
 function toggleTheme() {
     let currentTheme = document.documentElement.getAttribute("data-theme");
     let targetTheme = (currentTheme === "dark") ? "light" : "dark";

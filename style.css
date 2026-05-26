@@ -1,6 +1,7 @@
 /* ==========================================================================
    1. GLOBAL VARIABLES & LIGHT/DARK VARIABLES
    ========================================================================== */
+/* Ensure your variables are exactly declared like this */
 :root {
     --bg-gradient: linear-gradient(135deg, #f0f4ff, #eef2ff);
     --card-bg: #ffffff;
@@ -9,8 +10,6 @@
     --text-title: #1e266d;
     --border-color: #e2e8f0;
     --input-bg: #f8fafc;
-    --shadow: rgba(165, 178, 211, 0.15);
-    --shadow-task: rgba(165, 178, 211, 0.08);
 }
 
 [data-theme="dark"] {
@@ -21,8 +20,6 @@
     --text-title: #f1f5f9;
     --border-color: #334155;
     --input-bg: #0f172a;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --shadow-task: rgba(0, 0, 0, 0.2);
 }
 
 body {

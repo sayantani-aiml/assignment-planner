@@ -1,118 +1,65 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1">
-
-<title>Assignment Planner</title>
-
-<link
-rel="stylesheet"
-href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Planner Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="phone">
+    <div class="dashboard-container">
+        <aside class="sidebar-card">
+            <div class="header">
+                <h1>Hello Sayantani 👋</h1>
+                <p>Track and manage your assignments</p>
+            </div>
 
-<div class="header">
+            <div class="taskInput">
+                <label class="input-label">Assignment Name</label>
+                <input id="title" placeholder="e.g., Physics Lab Report">
 
-<div>
+                <label class="input-label">Subject</label>
+                <input id="subject" placeholder="e.g., Applied Physics">
 
-<h1>Hello Sayantani 👋</h1>
+                <label class="input-label">Due Date</label>
+                <input id="date" type="date">
 
-<p>Manage your assignments</p>
+                <label class="input-label">Priority Level</label>
+                <select id="priority">
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                </select>
 
-</div>
+                <button class="add-btn" onclick="addTask()">+ Add Task</button>
+            </div>
+        </aside>
 
-<div class="dateBox">
+        <main class="main-content">
+            <div class="stats-grid">
+                <div class="card card-total">
+                    <h2 id="total">0</h2>
+                    <p>Total Tasks</p>
+                </div>
+                <div class="card card-pending">
+                    <h2 id="pending">0</h2>
+                    <p>Pending</p>
+                </div>
+                <div class="card card-done">
+                    <h2 id="done">0</h2>
+                    <p>Completed</p>
+                </div>
+            </div>
 
-<h3 id="todayDate"></h3>
+            <div class="task-board">
+                <h2>Active Assignments</h2>
+                <div id="taskList">
+                    </div>
+            </div>
+        </main>
+    </div>
 
-</div>
-
-</div>
-
-<div class="stats">
-
-<div class="card">
-
-<h2 id="total">0</h2>
-
-<p>Total</p>
-
-</div>
-
-<div class="card">
-
-<h2 id="pending">0</h2>
-
-<p>Pending</p>
-
-</div>
-
-<div class="card">
-
-<h2 id="done">0</h2>
-
-<p>Done</p>
-
-</div>
-
-</div>
-
-<div class="taskInput">
-
-<input
-id="title"
-placeholder="Assignment">
-
-<input
-id="subject"
-placeholder="Subject">
-
-<input
-id="date"
-type="date">
-
-<select
-id="priority">
-
-<option>High</option>
-
-<option>Medium</option>
-
-<option>Low</option>
-
-</select>
-
-<button
-onclick="addTask()">
-
-+ Add Task
-
-</button>
-
-</div>
-
-<div
-id="taskList">
-
-</div>
-
-</div>
-
-<script
-src="script.js">
-
-</script>
-
+    <script src="script.js"></script>
 </body>
-
 </html>

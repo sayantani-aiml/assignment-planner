@@ -1,128 +1,70 @@
 body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
 
-background:linear-gradient(
-135deg,
-#4F46E5,
-#7C3AED,
-#EC4899
-);
+margin:0;
+
+font-family:
+Segoe UI;
+
+background:
+#dfe8ff;
 
 display:flex;
-justify-content:center;
-align-items:center;
 
-min-height:100vh;
+justify-content:center;
+
+padding:40px;
+
 }
 
-.container{
+.phone{
 
-background:rgba(255,255,255,0.15);
+width:380px;
 
-backdrop-filter:blur(12px);
+background:#edf3ff;
 
-padding:30px;
+padding:25px;
 
-width:400px;
-
-border-radius:25px;
+border-radius:35px;
 
 box-shadow:
-0 8px 32px rgba(0,0,0,0.25);
 
-color:white;
-}
-
-h1{
-
-text-align:center;
-
-margin-bottom:20px;
+0 15px 40px
+rgba(0,0,0,0.15);
 
 }
 
-input,
-select,
-button{
+.header{
 
-width:100%;
+display:flex;
 
-padding:14px;
+justify-content:
+space-between;
 
-margin:8px 0;
-
-border:none;
-
-border-radius:12px;
-
-font-size:15px;
-
-box-sizing:border-box;
+align-items:center;
 
 }
 
-input,
-select{
+.header h1{
+
+margin:0;
+
+color:#283593;
+
+}
+
+.header p{
+
+color:gray;
+
+}
+
+.dateBox{
 
 background:white;
-
-}
-
-button{
-
-background:#6C63FF;
-
-color:white;
-
-font-weight:bold;
-
-cursor:pointer;
-
-transition:0.3s;
-
-}
-
-button:hover{
-
-background:#5448ff;
-
-transform:scale(1.03);
-
-}
-
-li{
-
-list-style:none;
-
-background:white;
-
-color:black;
 
 padding:15px;
 
-margin-top:15px;
-
-border-radius:15px;
-
-animation:slide 0.4s;
-
-box-shadow:
-0 4px 10px rgba(0,0,0,0.15);
-
-}
-
-.deleteBtn{
-
-background:#ff4d6d;
-
-margin-top:10px;
-
-}
-
-.deleteBtn:hover{
-
-background:#e63956;
+border-radius:18px;
 
 }
 
@@ -130,45 +72,120 @@ background:#e63956;
 
 display:flex;
 
-justify-content:space-between;
+gap:10px;
 
-margin-bottom:20px;
+margin:25px 0;
 
 }
 
 .card{
 
-background:
-rgba(255,255,255,0.2);
+flex:1;
 
-padding:12px;
+background:white;
 
-border-radius:12px;
+padding:15px;
+
+border-radius:18px;
 
 text-align:center;
 
-width:30%;
+}
+
+.taskInput{
+
+display:flex;
+
+flex-direction:
+column;
+
+gap:10px;
 
 }
 
-@keyframes slide{
+input,
+select,
+button{
 
-from{
+padding:14px;
 
-opacity:0;
+border:none;
 
-transform:
-translateY(20px);
+border-radius:15px;
+
+font-size:15px;
+
+}
+
+button{
+
+background:
+#5b4dff;
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
 
 }
 
-to{
+#taskList{
 
-opacity:1;
+margin-top:20px;
 
-transform:
-translateY(0);
+display:flex;
+
+flex-direction:
+column;
+
+gap:15px;
 
 }
+
+.task{
+
+background:white;
+
+padding:18px;
+
+border-radius:20px;
+
+box-shadow:
+
+0 5px 15px
+rgba(0,0,0,0.08);
+
+}
+
+.high{
+
+border-left:
+8px solid #ff4b5c;
+
+}
+
+.medium{
+
+border-left:
+8px solid orange;
+
+}
+
+.low{
+
+border-left:
+8px solid green;
+
+}
+
+.delete{
+
+background:
+#ff4b5c;
+
+margin-top:10px;
+
+width:100%;
 
 }

@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. GLOBAL STYLES & RESET
+   ========================================================================== */
 body {
     margin: 0;
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
@@ -11,7 +14,9 @@ body {
     box-sizing: border-box;
 }
 
-/* Master Grid Layout */
+/* ==========================================================================
+   2. DASHBOARD GRID SYSTEM
+   ========================================================================== */
 .dashboard-container {
     display: grid;
     grid-template-columns: 360px 1fr;
@@ -20,7 +25,7 @@ body {
     max-width: 1200px;
 }
 
-/* Sidebar Styling */
+/* Left Sidebar Panel */
 .sidebar-card {
     background: #ffffff;
     padding: 32px;
@@ -44,7 +49,16 @@ h1 {
     font-size: 14px;
 }
 
-/* Elegant Form Styling */
+/* Right Main Content Panel */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* ==========================================================================
+   3. TASK CREATION FORM STYLING
+   ========================================================================== */
 .taskInput {
     display: flex;
     flex-direction: column;
@@ -97,14 +111,9 @@ input:focus, select:focus {
     box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
 }
 
-/* Right Content Area */
-.main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
-/* Designer Stat Cards */
+/* ==========================================================================
+   4. METRIC STAT CARDS
+   ========================================================================== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -133,7 +142,7 @@ input:focus, select:focus {
     font-weight: 500;
 }
 
-/* Specific Stat Accents */
+/* Metric Color Coding Accent Borders */
 .card-total h2 { color: #2563eb; }
 .card-total { border-top: 4px solid #2563eb; }
 
@@ -143,30 +152,40 @@ input:focus, select:focus {
 .card-done h2 { color: #16a34a; }
 .card-done { border-top: 4px solid #16a34a; }
 
-/* Main Task Board Area */
+/* ==========================================================================
+   5. TASK LISTS & CONTAINERS
+   ========================================================================== */
 .task-board h2 {
     font-size: 20px;
     color: #1e293b;
     margin: 0 0 20px 0;
 }
 
-#taskList {
+#taskList, #completedTaskList {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-/* Modernized Task Items Structure */
+/* Completed Segment Secondary Subheading color styling */
+.completed-section h2 {
+    color: #64748b;
+    margin-top: 16px;
+}
+
+/* ==========================================================================
+   6. DYNAMIC TASK ITEM CARD COMPONENTS
+   ========================================================================== */
 .task {
     background: #ffffff;
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(165, 178, 211, 0.08);
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 12px;
-    transition: transform 0.2s ease;
+    gap: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-left: 6px solid #cbd5e1;
 }
 
@@ -175,6 +194,7 @@ input:focus, select:focus {
     box-shadow: 0 6px 20px rgba(165, 178, 211, 0.15);
 }
 
+/* Content Information Block */
 .task-info h3 {
     margin: 0 0 4px 0;
     font-size: 18px;
@@ -193,16 +213,50 @@ input:focus, select:focus {
     align-items: center;
 }
 
-.task-date {
+.task-date-display {
     font-size: 13px;
     color: #64748b;
     background: #f1f5f9;
     padding: 4px 10px;
     border-radius: 20px;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
 }
 
-/* Priority Pills */
+/* ==========================================================================
+   7. INTERACTIVE ACTION INPUTS & PILLES
+   ========================================================================== */
+/* Checkbox UI Styling */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 4px;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid #cbd5e1;
+    cursor: pointer;
+    accent-color: #16a34a;
+    transition: all 0.2s;
+}
+
+/* Inline Date Input Box Override inside cards */
+.inline-date-edit {
+    padding: 2px 6px;
+    font-size: 13px;
+    border: 1.5px solid #4f46e5;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #334155;
+    width: 120px;
+}
+
+/* Priority Tags System Colors */
 .priority-badge {
     font-size: 12px;
     font-weight: 600;
@@ -220,7 +274,30 @@ input:focus, select:focus {
 .low { border-left-color: #22c55e; }
 .low .priority-badge { background: #dcfce7; color: #15803d; }
 
-/* Styled Inline Delete Button */
+/* Control Action Row Buttons */
+.task-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-btn {
+    padding: 8px 14px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.edit-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
 .delete-btn {
     padding: 8px 14px;
     background: #fff1f2;
@@ -238,13 +315,33 @@ input:focus, select:focus {
     color: #9f1239;
 }
 
-/* Responsive adjustment for small desktop screen views */
-@media (max-width: 850px) {
+/* ==========================================================================
+   8. COMPLETED TASKS CONDITIONAL ARCHITECTURE
+   ========================================================================== */
+.task-completed {
+    opacity: 0.65;
+    border-left-color: #cbd5e1 !important;
+    background: #f8fafc;
+}
+
+.task-completed .task-info h3 {
+    text-decoration: line-through;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   9. MOBILE RESPONSIVE MEDIA BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 900px) {
     .dashboard-container {
         grid-template-columns: 1fr;
     }
     .sidebar-card {
         position: relative;
         top: 0;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 }

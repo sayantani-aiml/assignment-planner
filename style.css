@@ -2,11 +2,14 @@ body{
 
 margin:0;
 
-font-family:
-Segoe UI;
+font-family:'Segoe UI',sans-serif;
 
 background:
-#dfe8ff;
+linear-gradient(
+135deg,
+#dbe8ff,
+#e8ddff
+);
 
 display:flex;
 
@@ -14,41 +17,38 @@ justify-content:center;
 
 padding:40px;
 
+min-height:100vh;
+
 }
 
 .phone{
 
-width:380px;
+width:420px;
 
-background:#edf3ff;
+background:#eef3ff;
 
-padding:25px;
+padding:30px;
 
 border-radius:35px;
 
 box-shadow:
+0 15px 40px rgba(0,0,0,0.12);
 
-0 15px 40px
-rgba(0,0,0,0.15);
+}
+
+h1{
+
+margin:0;
+
+font-size:38px;
+
+color:#24306e;
 
 }
 
 .header{
 
-display:flex;
-
-justify-content:
-space-between;
-
-align-items:center;
-
-}
-
-.header h1{
-
-margin:0;
-
-color:#283593;
+margin-bottom:25px;
 
 }
 
@@ -58,23 +58,13 @@ color:gray;
 
 }
 
-.dateBox{
-
-background:white;
-
-padding:15px;
-
-border-radius:18px;
-
-}
-
 .stats{
 
 display:flex;
 
-gap:10px;
+gap:12px;
 
-margin:25px 0;
+margin-bottom:25px;
 
 }
 
@@ -84,11 +74,22 @@ flex:1;
 
 background:white;
 
-padding:15px;
+padding:18px;
 
 border-radius:18px;
 
 text-align:center;
+
+box-shadow:
+0 3px 8px rgba(0,0,0,0.05);
+
+}
+
+.card h2{
+
+color:#4a4fff;
+
+margin:5px;
 
 }
 
@@ -96,22 +97,22 @@ text-align:center;
 
 display:flex;
 
-flex-direction:
-column;
+flex-direction:column;
 
-gap:10px;
+gap:12px;
 
 }
 
 input,
-select,
-button{
+select{
 
-padding:14px;
+padding:16px;
 
 border:none;
 
-border-radius:15px;
+border-radius:16px;
+
+background:white;
 
 font-size:15px;
 
@@ -119,25 +120,37 @@ font-size:15px;
 
 button{
 
-background:
-#5b4dff;
+padding:15px;
+
+border:none;
+
+background:#5a4dff;
 
 color:white;
 
 font-weight:bold;
 
+border-radius:16px;
+
 cursor:pointer;
+
+transition:0.2s;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
 
 }
 
 #taskList{
 
-margin-top:20px;
+margin-top:25px;
 
 display:flex;
 
-flex-direction:
-column;
+flex-direction:column;
 
 gap:15px;
 
@@ -152,40 +165,45 @@ padding:18px;
 border-radius:20px;
 
 box-shadow:
-
-0 5px 15px
-rgba(0,0,0,0.08);
+0 5px 15px rgba(0,0,0,0.08);
 
 }
 
 .high{
 
 border-left:
-8px solid #ff4b5c;
+7px solid #ff5d73;
 
 }
 
 .medium{
 
 border-left:
-8px solid orange;
+7px solid orange;
 
 }
 
 .low{
 
 border-left:
-8px solid green;
+7px solid #22c55e;
 
 }
 
 .delete{
 
-background:
-#ff4b5c;
+margin-top:12px;
 
-margin-top:10px;
+background:#ff5d73;
 
-width:100%;
+}
+
+.date{
+
+font-size:13px;
+
+color:gray;
+
+margin-top:6px;
 
 }

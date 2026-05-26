@@ -14,48 +14,39 @@ document.getElementById("priority").value;
 
 if(title===""){
 
-alert("Enter title");
+alert("Enter assignment title");
 
 return;
 
 }
 
 let li=
-document.createElement("li");
+document.createElement("div");
 
-let color;
+li.classList.add("task");
 
-if(priority==="High")
-color="#ff4d4d";
-
-else if(priority==="Medium")
-color="#ffa500";
-
-else
-color="#22c55e";
-
-li.style.borderLeft=
-`8px solid ${color}`;
+li.classList.add(
+priority.toLowerCase()
+);
 
 li.innerHTML=
 
-`${title}
-(${subject})
+`
+<h3>${title}</h3>
 
-<br>
+<p>${subject}</p>
 
-Due:
-${date}
+<p class="date">
+📅 ${date}
+</p>
 
-<br>
-
+<p>
 Priority:
 ${priority}
-
-<br>
+</p>
 
 <button
-class="deleteBtn"
+class="delete"
 
 onclick="
 this.parentElement.remove();
@@ -64,7 +55,8 @@ updateStats();
 
 Delete
 
-</button>`;
+</button>
+`;
 
 document
 .getElementById("taskList")
@@ -72,13 +64,22 @@ document
 
 updateStats();
 
+document
+.getElementById("title").value="";
+
+document
+.getElementById("subject").value="";
+
+document
+.getElementById("date").value="";
+
 }
 
 function updateStats(){
 
 let total=
 document
-.querySelectorAll("li")
+.querySelectorAll(".task")
 .length;
 
 document
